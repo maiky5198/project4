@@ -1,6 +1,6 @@
 # Exhibition
 
-![alt text](/Screen%20Shot%202022-04-21%20at%203.01.02%20PM.png)
+![alt text](/Database%20ER%20diagram.jpeg)
 
 # Tech Stack
 
