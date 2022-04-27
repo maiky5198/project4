@@ -2,7 +2,7 @@
 const express = require('express')
 const passport = require('passport')
 const Comment = require('../models/comment')
-const Adventure = require ('../models/adventure')
+const Exhibition = require ('../models/exhibition')
 const router = express.Router()
 
 const customErrors = require('../../lib/custom_errors')
@@ -15,42 +15,42 @@ const removeBlanks = require('../../lib/remove_blank_fields')
 // POST -> create a comment
 // POST /comment/:advId
 // make a route the posts all the new comments 
-router.post('/comments/:adventureId', requireToken, (req,res, next) => {
+router.post('/comments/:exhibitionId', requireToken, (req,res, next) => {
         //get our comment from req.body
         const comment = req.body.comment
         req.body.comment.owner = req.user.id
         //get our adventureId from req.params.id
-        const adventureId = req.params.adventureId
+        const exhibitionId = req.params.exhibitionId
         //find the adventure
-        Adventure.findById(adventureId)
+        Exhibition.findById(exhibitionId)
             .then(handle404)
         //push the comment to the comments array
-            .then(adventure => {
-                console.log('this is the adventure', adventure)
+            .then(exhibition => {
+                console.log('this is the adventure', exhibition)
                 console.log('this is the comment', comment)
-                adventure.comments.push(comment)
+                exhibition.comments.push(comment)
                 //save the adventure
-                return adventure.save()
+                return exhibition.save()
             })
         //then we send the adventure as json
-            .then(adventure => res.status(201).json({adventure: adventure}))
+            .then(exhibition => res.status(201).json({exhibition: exhibition}))
         //catch errors and send to the handler
             .catch(next)
 })
 
 // Delete route for the comments
-router.delete('/comments/:adventureId/:commId', requireToken, (req,res, next) => {
+router.delete('/comments/:exhibitionId/:commId', requireToken, (req,res, next) => {
      // saving both ids to variables for easy ref later
      const commId = req.params.commId
-     const adventureId = req.params.adventureId
+     const exhibitionId = req.params.exhibitionId
      // find the pet in the db
-     Adventure.findById(adventureId)
+     Exhibition.findById(exhibitionId)
         .populate('comments.owner')
          // if pet not found throw 404
          .then(handle404)
-         .then(adventure => {
+         .then(exhibition => {
              // get the specific subdocument by its id
-             const theComment = adventure.comments.id(commId)
+             const theComment = exhibition.comments.id(commId)
              console.log('this is the comment', theComment)
              // require that the deleter is the owner of the comment
              requireOwnership(req, theComment)
@@ -58,7 +58,7 @@ router.delete('/comments/:adventureId/:commId', requireToken, (req,res, next) =>
              theComment.remove()
  
              // return the saved pet
-             return adventure.save()
+             return exhibition.save()
          })
          // send 204 no content
          .then(() => res.sendStatus(204))
