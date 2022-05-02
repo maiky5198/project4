@@ -13,6 +13,10 @@ const exhibitionSchema = new mongoose.Schema(
 		type: {
 			type: String,
 			required: true,
+		},	
+		description: {
+				type: String,
+				required: true,	
 		},
 		item: [itemSchema],
 		comments: [commentSchema],
