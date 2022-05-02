@@ -10,9 +10,13 @@ const itemSchema = new mongoose.Schema({
          type: String,
          required: true
     },
-    manufacturer: {
-        type: Number,
+    artist: {
+        type: String,
         required: true
+    },
+    year: {
+        type: Number,
+        required: true       
     },
     image: {
         type: String,
