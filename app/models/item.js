@@ -11,7 +11,7 @@ const itemSchema = new mongoose.Schema({
          required: true
     },
     manufacturer: {
-        type: String,
+        type: Number,
         required: true
     },
     img: {
