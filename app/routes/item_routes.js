@@ -16,33 +16,33 @@ const router = express.Router()
 
 //ROUTES GO HERE
 
-//POST -> create gear
-//POST /gear/<adventure_id>
+//POST -> create item
+//POST /item/<exhibition_id>
 router.post('/item/:exhibitionId', requireToken, (req, res, next)=>{
-    //get our gear from req.body
+    //get our item from req.body
     const item = req.body.item
-    //get our adventureId from req.params.id
+    //get our exhibitionId from req.params.id
     const exhibitionId = req.params.exhibitionId
-    //find the adventure
+    //find the exhibition
     Exhibition.findById(exhibitionId)
         .then(handle404)
-    //push the gear to the gear array
+    //push the item to the item array
         .then(exhibition => {
-            console.log('this is the adventure', exhibition)
-            console.log('this is the gear', item)
+            console.log('this is the exhibition', exhibition)
+            console.log('this is the item', item)
             requireOwnership(req, exhibition)
             exhibition.item.push(item)
-            //save the adventure
+            //save the exhibition
             return exhibition.save()
         })
-    //then we send the adventure as json
+    //then we send the exhibition as json
         .then(exhibition => res.status(201).json({exhibition: exhibition}))
     //catch errors and send to the handler
         .catch(next)
 })
-// //PATCH -> update a piece of gear
-//PATCH /gear/<adventure_id>/<gear_id>
-router.patch('/gear/:exhibitionId/:itemId', requireToken, removeBlanks, (req, res, next)=>{
+// //PATCH -> update a piece of item
+//PATCH /item/<exhibition_id>/<item_id>
+router.patch('/item/:exhibitionId/:itemId', requireToken, removeBlanks, (req, res, next)=>{
     const itemId = req.params.itemId
     const exhibitionId = req.params.exhibitionId
 
@@ -50,31 +50,31 @@ router.patch('/gear/:exhibitionId/:itemId', requireToken, removeBlanks, (req, re
         .then(handle404)
         .then(exhibition => {
             const theItem = exhibition.item.id(itemId)
-            console.log('this is the original gear')
-            requireOwnership(req, exhibitions)
-            theItem.set(req.body.gear)
+            console.log('this is the original item')
+            requireOwnership(req, exhibition)
+            theItem.set(req.body.item)
             return exhibition.save()
         })
         .then(()=> res.sendStatus(204))
         .catch(next)
 })
-//DELETE -> delete a piece of gear
-//DELETE /gear/<adventure_id>/<gear_id>
-router.delete('/gear/:exhibitionId/:itemId', requireToken, (req, res, next)=>{
+//DELETE -> delete a piece of item
+//DELETE /item/<exhibition_id>/<item_id>
+router.delete('/item/:exhibitionId/:itemId', requireToken, (req, res, next)=>{
     const itemId = req.params.itemId
     const exhibitionId = req.params.exhibitionId
-    //find the adventure in the database
+    //find the exhibition in the database
     Exhibition.findById(exhibitionId)
-        //if adventure not found 404
+        //if exhibition not found 404
         .then(handle404)
         .then(exhibition => {
             //get the subdocument by its id
             const theItem =  exhibition.item.id(itemId)
-            //require that the deleter is the owner of the adventure
+            //require that the deleter is the owner of the exhibition
             requireOwnership(req, exhibition)
-            //call remove on the gear we got on the line above requireOwnership
+            //call remove on the item we got on the line above requireOwnership
             theItem.remove()
-            //return the saved adventure
+            //return the saved exhibition
             return exhibition.save()
         })
         //send 204 no content
