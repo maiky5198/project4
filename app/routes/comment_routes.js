@@ -13,26 +13,25 @@ const requireToken = passport.authenticate('bearer', { session: false })
 const removeBlanks = require('../../lib/remove_blank_fields')
 
 // POST -> create a comment
-// POST /comment/:advId
 // make a route the posts all the new comments 
 router.post('/comments/:exhibitionId', requireToken, (req,res, next) => {
         //get our comment from req.body
         const comment = req.body.comment
         req.body.comment.owner = req.user.id
-        //get our adventureId from req.params.id
+        //get our  from req.params.id
         const exhibitionId = req.params.exhibitionId
-        //find the adventure
+        //find the 
         Exhibition.findById(exhibitionId)
             .then(handle404)
         //push the comment to the comments array
             .then(exhibition => {
-                console.log('this is the adventure', exhibition)
+                console.log('this is the exhibition', exhibition)
                 console.log('this is the comment', comment)
                 exhibition.comments.push(comment)
-                //save the adventure
+                //save the exhibition
                 return exhibition.save()
             })
-        //then we send the adventure as json
+        //then we send the exhibition as json
             .then(exhibition => res.status(201).json({exhibition: exhibition}))
         //catch errors and send to the handler
             .catch(next)

@@ -23,7 +23,7 @@ const router = express.Router()
 //ROUTES GO HERE
 
 //INDEX ROUTE
-//Get adventures 
+//Get exhibitions 
 router.get('/exhibitions', (req, res, next)=>{
     Exhibition.find()
     .populate('owner')
@@ -36,7 +36,7 @@ router.get('/exhibitions', (req, res, next)=>{
         .catch(next)
 })
 
-//Get user's adventures
+//Get user's exhibitions
 router.get('/exhibitions/mine', requireToken, (req, res, next)=>{
     Exhibition.find({owner: req.user.id})
     .populate('owner')
@@ -49,7 +49,7 @@ router.get('/exhibitions/mine', requireToken, (req, res, next)=>{
         .catch(next)
 })
 
-//Get Index of a specific user's adventures
+//Get Index of a specific user's exhibitions
 router.get('/exhibitions/user/:ownerId', (req, res, next)=>{
     Exhibition.find({owner: req.params.ownerId})
     .populate('owner')
@@ -63,7 +63,7 @@ router.get('/exhibitions/user/:ownerId', (req, res, next)=>{
 })
 
 // SHOW
-// GET /adventures/62489de4569a9cb06f4303a4
+// GET /exhibitions/62489de4569a9cb06f4303a4
 router.get('/exhibitions/:id', (req, res, next) => {
     // we get the id from req.params.id -> :id
     Exhibition.findById(req.params.id)
@@ -75,7 +75,7 @@ router.get('/exhibitions/:id', (req, res, next) => {
 })
 
 //CREATE
-//POST /adventures
+//POST /exhibitions
 router.post('/exhibitions', requireToken, (req, res, next)=>{
     //we brought in requreToken so we can have access to req.user
     req.body.exhibition.owner = req.user.id
@@ -89,15 +89,15 @@ router.post('/exhibitions', requireToken, (req, res, next)=>{
 })
 
 //UPDATE
-//PATCH /adventures/62489de4569a9cb06f4303a4
+//PATCH /exhibitions/62489de4569a9cb06f4303a4
 router.patch('/exhibitions/:id', requireToken, removeBlanks, (req, res, next)=>{
-    //if the client attempts to change the owner of the adventure we can disallow that from the get go
+    //if the client attempts to change the owner of the exhibition we can disallow that from the get go
     delete req.body.owner
-    //then find adventure by id
+    //then find exhibition by id
     Exhibition.findById(req.params.id)
     //handle 404
     .then(handle404)
-    //require ownership and update adventure
+    //require ownership and update exhibition
     .then(exhibition =>{
         requireOwnership(req, exhibition)
         return exhibition.updateOne(req.body.exhibition)
@@ -109,9 +109,9 @@ router.patch('/exhibitions/:id', requireToken, removeBlanks, (req, res, next)=>{
 })
 
 //REMOVE
-//DELETE /adventures/624470c12ed7079ead53d4df
+//DELETE /exhibitions/624470c12ed7079ead53d4df
 router.delete('/exhibitions/:id', requireToken, (req, res, next) =>{
-    //find the adventure by id
+    //find the exhibition by id
     Exhibition.findById(req.params.id)
         .then(handle404)
         .then(exhibition => {
